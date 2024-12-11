@@ -81,14 +81,14 @@
         </Grid>
 
         <!-- Недельный вид -->
-        <Grid x:Name="WeekView" Grid.Row="2" Visibility="Collapsed">
+        <Grid x:Name="WeekView" Grid.Row="2" Visibility="{Binding IsWeekViewVisible, Converter={StaticResource BooleanToVisibilityConverter}}" Background="Transparent">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <!-- Заголовки дней недели -->
-            <Grid Grid.Row="0">
+            <Grid Grid.Row="0" HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="60"/> <!-- Время -->
                     <ColumnDefinition Width="*"/> <!-- ПН -->
@@ -137,21 +137,16 @@
                             <RowDefinition Height="60"/>
                             <RowDefinition Height="60"/>
                             <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
                         </Grid.RowDefinitions>
+
+                        <!-- Добавляем горизонтальные линии -->
+                        <ItemsControl ItemsSource="{Binding Rows}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="LightGray" BorderThickness="0,0,0,1"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </Grid>
 
                     <!-- Сетка тренировок -->
@@ -167,36 +162,27 @@
                             <RowDefinition Height="60"/>
                             <RowDefinition Height="60"/>
                             <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
                         </Grid.RowDefinitions>
-                        <!-- Линии сетки -->
-                        <Grid.Background>
-                            <DrawingBrush Viewport="0,0,1,1" ViewportUnits="RelativeToBoundingBox" TileMode="Tile">
-                                <DrawingBrush.Drawing>
-                                    <GeometryDrawing>
-                                        <GeometryDrawing.Geometry>
-                                            <RectangleGeometry Rect="0,0,1,1"/>
-                                        </GeometryDrawing.Geometry>
-                                        <GeometryDrawing.Pen>
-                                            <Pen Brush="#20000000" Thickness="0.5"/>
-                                        </GeometryDrawing.Pen>
-                                    </GeometryDrawing>
-                                </DrawingBrush.Drawing>
-                            </DrawingBrush>
-                        </Grid.Background>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <!-- Добавление линий с использованием Border -->
+                        <Border BorderBrush="{DynamicResource GridLineBrush}" BorderThickness="0,0,0,1" Grid.Row="0" Grid.ColumnSpan="7"/>
+                        <Border BorderBrush="{DynamicResource GridLineBrush}" BorderThickness="0,0,0,1" Grid.Row="1" Grid.ColumnSpan="7"/>
+                        <Border BorderBrush="{DynamicResource GridLineBrush}" BorderThickness="0,0,0,1" Grid.Row="2" Grid.ColumnSpan="7"/>
+                        <Border BorderBrush="{DynamicResource GridLineBrush}" BorderThickness="0,0,0,1" Grid.Row="3" Grid.ColumnSpan="7"/>
+                        <Border BorderBrush="{DynamicResource GridLineBrush}" BorderThickness="0,0,0,1" Grid.Row="4" Grid.ColumnSpan="7"/>
+                        <Border BorderBrush="{DynamicResource GridLineBrush}" BorderThickness="0,0,0,1" Grid.Row="5" Grid.ColumnSpan="7"/>
+                        <Border BorderBrush="{DynamicResource GridLineBrush}" BorderThickness="0,0,0,1" Grid.Row="6" Grid.ColumnSpan="7"/>
+                        <Border BorderBrush="{DynamicResource GridLineBrush}" BorderThickness="0,0,0,1" Grid.Row="7" Grid.ColumnSpan="7"/>
+                        <Border BorderBrush="{DynamicResource GridLineBrush}" BorderThickness="0,0,0,1" Grid.Row="8" Grid.ColumnSpan="7"/>
+                        <Border BorderBrush="{DynamicResource GridLineBrush}" BorderThickness="0,0,0,1" Grid.Row="9" Grid.ColumnSpan="7"/>
                     </Grid>
                 </Grid>
             </ScrollViewer>

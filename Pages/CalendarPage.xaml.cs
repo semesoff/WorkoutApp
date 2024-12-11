@@ -433,8 +433,7 @@ namespace WorkoutApp.Pages
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error in ViewType_Changed: {ex}");
-                MessageBox.Show($"Ошибка при переключении вида: {ex.Message}",
-                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                // MessageBox.Show($"Ошибка при переключении вида: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

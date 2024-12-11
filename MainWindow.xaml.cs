@@ -73,6 +73,12 @@ namespace WorkoutApp
                     Context = new WorkoutDbContext();
                     Context.EnsureDatabaseCreated();
                 }
+                if (Context == null)
+                {
+                    Debug.WriteLine("Database context is null, creating new one before navigating to CalendarPage");
+                    Context = new WorkoutDbContext();
+                    Context.EnsureDatabaseCreated();
+                }
 
                 var calendarPage = new CalendarPage(Context);
                 MainFrame.Navigate(calendarPage);
@@ -82,7 +88,7 @@ namespace WorkoutApp
             {
                 Debug.WriteLine($"Error in NavigateToCalendar: {ex.Message}");
                 Debug.WriteLine($"Stack trace: {ex.StackTrace}");
-                MessageBox.Show($"Ошибка при переходе на страницу календаря: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                // MessageBox.Show($"Ошибка при переходе на страницу календаря: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -110,24 +116,7 @@ namespace WorkoutApp
 
         private void ToggleTheme(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                Debug.WriteLine("Toggling theme...");
-                isDarkTheme = !isDarkTheme;
-
-                var app = Application.Current;
-                if (app.Resources.MergedDictionaries.Count > 0)
-                {
-                    var themePath = isDarkTheme ? "Themes/DarkTheme.xaml" : "Themes/LightTheme.xaml";
-                    app.Resources.MergedDictionaries[0].Source = new Uri(themePath, UriKind.Relative);
-                    Debug.WriteLine($"Switched to {(isDarkTheme ? "dark" : "light")} theme");
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error in ToggleTheme: {ex.Message}");
-                MessageBox.Show($"Ошибка при смене темы: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            App.ToggleTheme();
         }
 
         private void EnsureDatabaseContext()

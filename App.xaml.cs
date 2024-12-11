@@ -63,5 +63,23 @@ namespace WorkoutApp
                 Current.Shutdown();
             }
         }
+
+        public static void ToggleTheme()
+        {
+            var app = Current as App;
+            var isDarkTheme = app.Resources["IsDarkTheme"] as bool? ?? false;
+            app.Resources["IsDarkTheme"] = !isDarkTheme;
+
+            var dictionaries = app.Resources.MergedDictionaries;
+            var newTheme = new ResourceDictionary
+            {
+                Source = new Uri(!isDarkTheme ? 
+                    "pack://application:,,,/WorkoutApp;component/Themes/DarkTheme.xaml" : 
+                    "pack://application:,,,/WorkoutApp;component/Themes/LightTheme.xaml")
+            };
+
+            dictionaries.Clear();
+            dictionaries.Add(newTheme);
+        }
     }
 }
