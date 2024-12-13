@@ -114,11 +114,6 @@ namespace WorkoutApp
             }
         }
 
-        private void ToggleTheme(object sender, RoutedEventArgs e)
-        {
-            App.ToggleTheme();
-        }
-
         private void EnsureDatabaseContext()
         {
             if (Context == null)

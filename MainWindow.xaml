@@ -21,23 +21,5 @@
 
         <!-- Main Content -->
         <Frame x:Name="MainFrame" Grid.Row="1" NavigationUIVisibility="Hidden"/>
-
-        <!-- Theme Toggle Button -->
-        <Button x:Name="ThemeToggleButton"
-                Grid.Row="1"
-                Width="50"
-                Height="50"
-                Click="ToggleTheme"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                Margin="20"
-                Style="{StaticResource NavigationButton}">
-            <Path x:Name="ThemeIcon"
-                  Data="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4Z"
-                  Fill="{DynamicResource PrimaryForeground}"
-                  Width="24"
-                  Height="24"
-                  Stretch="Uniform"/>
-        </Button>
     </Grid>
 </Window>

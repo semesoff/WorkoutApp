@@ -317,23 +317,6 @@ namespace WorkoutApp.Pages
             }
         }
 
-        private void AddWorkoutButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                var window = new EditWorkoutWindow(_context, new Workout());
-                if (window.ShowDialog() == true)
-                {
-                    UpdateView();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error in AddWorkoutButton_Click: {ex}");
-                MessageBox.Show($"Error adding workout: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
         private void EditWorkout(Workout workout)
         {
             try
