@@ -3,43 +3,49 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:WorkoutApp.Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="600" d:DesignWidth="800"
-      Title="Календарь">
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Calendar">
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Верхняя панель с навигацией -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
-            <Button Content="◀" Click="PreviousPeriod_Click" Width="30" Height="30" Margin="0,0,10,0"/>
-            <TextBlock x:Name="PeriodText" VerticalAlignment="Center" FontSize="16" Margin="0,0,10,0"/>
-            <Button Content="▶" Click="NextPeriod_Click" Width="30" Height="30" Margin="0,0,10,0"/>
-            <Button Content="+ Добавить тренировку" Click="AddWorkoutButton_Click" 
-                    Margin="20,0,0,0" Padding="10,5"/>
-        </StackPanel>
+        <!-- Header with navigation -->
+        <Grid Grid.Row="0" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
-        <!-- Переключатель вида -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,0,10,10">
-            <RadioButton x:Name="MonthViewRadio" Content="Месяц" IsChecked="True" 
-                        Margin="0,0,20,0" Checked="ViewType_Changed"/>
-            <RadioButton x:Name="WeekViewRadio" Content="Неделя" 
-                        Margin="0,0,20,0" Checked="ViewType_Changed"/>
-        </StackPanel>
+            <!-- Navigation Controls -->
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <Button Content="Previous" Click="PreviousPeriod_Click" Style="{DynamicResource NavigationButton}" Margin="0,0,5,0"/>
+                <TextBlock x:Name="PeriodText" Text="Period" VerticalAlignment="Center" Margin="5,0"/>
+                <Button Content="Next" Click="NextPeriod_Click" Style="{DynamicResource NavigationButton}" Margin="5,0,0,0"/>
+            </StackPanel>
 
-        <!-- Месячный вид -->
-        <Grid x:Name="MonthView" Grid.Row="2" Visibility="Visible">
+            <!-- View Controls -->
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <Button Content="Today" Click="Today_Click" Style="{DynamicResource NavigationButton}" Margin="0,0,5,0"/>
+                <Button Content="Toggle View" Click="ToggleView_Click" Style="{DynamicResource NavigationButton}" Margin="5,0,0,0"/>
+                <Button Content="Add Workout" Click="AddWorkoutButton_Click" Style="{DynamicResource NavigationButton}" Margin="5,0,0,0"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Month View -->
+        <Grid x:Name="MonthView" Grid.Row="1" Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Заголовки дней недели -->
-            <Grid Grid.Row="0">
+            <!-- Month Header -->
+            <Grid Grid.Row="0" Background="{DynamicResource SurfaceBackground}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -49,16 +55,17 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="ПН" Grid.Column="0" HorizontalAlignment="Center" Margin="5"/>
-                <TextBlock Text="ВТ" Grid.Column="1" HorizontalAlignment="Center" Margin="5"/>
-                <TextBlock Text="СР" Grid.Column="2" HorizontalAlignment="Center" Margin="5"/>
-                <TextBlock Text="ЧТ" Grid.Column="3" HorizontalAlignment="Center" Margin="5"/>
-                <TextBlock Text="ПТ" Grid.Column="4" HorizontalAlignment="Center" Margin="5"/>
-                <TextBlock Text="СБ" Grid.Column="5" HorizontalAlignment="Center" Margin="5"/>
-                <TextBlock Text="ВС" Grid.Column="6" HorizontalAlignment="Center" Margin="5"/>
+
+                <TextBlock Text="Monday" Grid.Column="0" HorizontalAlignment="Center" Margin="5"/>
+                <TextBlock Text="Tuesday" Grid.Column="1" HorizontalAlignment="Center" Margin="5"/>
+                <TextBlock Text="Wednesday" Grid.Column="2" HorizontalAlignment="Center" Margin="5"/>
+                <TextBlock Text="Thursday" Grid.Column="3" HorizontalAlignment="Center" Margin="5"/>
+                <TextBlock Text="Friday" Grid.Column="4" HorizontalAlignment="Center" Margin="5"/>
+                <TextBlock Text="Saturday" Grid.Column="5" HorizontalAlignment="Center" Margin="5"/>
+                <TextBlock Text="Sunday" Grid.Column="6" HorizontalAlignment="Center" Margin="5"/>
             </Grid>
 
-            <!-- Сетка дней -->
+            <!-- Month Calendar Grid -->
             <Grid x:Name="MonthCalendarGrid" Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -80,110 +87,177 @@
             </Grid>
         </Grid>
 
-        <!-- Недельный вид -->
-        <Grid x:Name="WeekView" Grid.Row="2" Visibility="{Binding IsWeekViewVisible, Converter={StaticResource BooleanToVisibilityConverter}}" Background="Transparent">
+        <!-- Weekly View -->
+        <Grid x:Name="WeeklyView" Grid.Row="1" Visibility="Visible">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Заголовки дней недели -->
-            <Grid Grid.Row="0" HorizontalAlignment="Stretch">
+            <!-- Week Header -->
+            <Grid Grid.Row="0" Background="{DynamicResource SurfaceBackground}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="60"/> <!-- Время -->
-                    <ColumnDefinition Width="*"/> <!-- ПН -->
-                    <ColumnDefinition Width="*"/> <!-- ВТ -->
-                    <ColumnDefinition Width="*"/> <!-- СР -->
-                    <ColumnDefinition Width="*"/> <!-- ЧТ -->
-                    <ColumnDefinition Width="*"/> <!-- ПТ -->
-                    <ColumnDefinition Width="*"/> <!-- СБ -->
-                    <ColumnDefinition Width="*"/> <!-- ВС -->
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
+                
+                <TextBlock Text="Time" Grid.Column="0" 
+                         HorizontalAlignment="Center" 
+                         VerticalAlignment="Center"
+                         Margin="5"
+                         Foreground="{DynamicResource PrimaryForeground}"/>
 
-                <TextBlock Text="Время" Grid.Column="0" HorizontalAlignment="Center" Margin="5"/>
-                <TextBlock x:Name="Day1Header" Grid.Column="1" Text="ПН" HorizontalAlignment="Center" Margin="5"/>
-                <TextBlock x:Name="Day2Header" Grid.Column="2" Text="ВТ" HorizontalAlignment="Center" Margin="5"/>
-                <TextBlock x:Name="Day3Header" Grid.Column="3" Text="СР" HorizontalAlignment="Center" Margin="5"/>
-                <TextBlock x:Name="Day4Header" Grid.Column="4" Text="ЧТ" HorizontalAlignment="Center" Margin="5"/>
-                <TextBlock x:Name="Day5Header" Grid.Column="5" Text="ПТ" HorizontalAlignment="Center" Margin="5"/>
-                <TextBlock x:Name="Day6Header" Grid.Column="6" Text="СБ" HorizontalAlignment="Center" Margin="5"/>
-                <TextBlock x:Name="Day7Header" Grid.Column="7" Text="ВС" HorizontalAlignment="Center" Margin="5"/>
+                <TextBlock Text="Monday" Grid.Column="1" 
+                         HorizontalAlignment="Center" 
+                         VerticalAlignment="Center"
+                         Margin="5"
+                         Foreground="{DynamicResource PrimaryForeground}"/>
+
+                <TextBlock Text="Tuesday" Grid.Column="2" 
+                         HorizontalAlignment="Center" 
+                         VerticalAlignment="Center"
+                         Margin="5"
+                         Foreground="{DynamicResource PrimaryForeground}"/>
+
+                <TextBlock Text="Wednesday" Grid.Column="3" 
+                         HorizontalAlignment="Center" 
+                         VerticalAlignment="Center"
+                         Margin="5"
+                         Foreground="{DynamicResource PrimaryForeground}"/>
+
+                <TextBlock Text="Thursday" Grid.Column="4" 
+                         HorizontalAlignment="Center" 
+                         VerticalAlignment="Center"
+                         Margin="5"
+                         Foreground="{DynamicResource PrimaryForeground}"/>
+
+                <TextBlock Text="Friday" Grid.Column="5" 
+                         HorizontalAlignment="Center" 
+                         VerticalAlignment="Center"
+                         Margin="5"
+                         Foreground="{DynamicResource PrimaryForeground}"/>
+
+                <TextBlock Text="Saturday" Grid.Column="6" 
+                         HorizontalAlignment="Center" 
+                         VerticalAlignment="Center"
+                         Margin="5"
+                         Foreground="{DynamicResource PrimaryForeground}"/>
+
+                <TextBlock Text="Sunday" Grid.Column="7" 
+                         HorizontalAlignment="Center" 
+                         VerticalAlignment="Center"
+                         Margin="5"
+                         Foreground="{DynamicResource PrimaryForeground}"/>
             </Grid>
 
-            <!-- Основная сетка с временем и тренировками -->
+            <!-- Week Grid with ScrollViewer -->
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="60"/> <!-- Время -->
-                        <ColumnDefinition Width="*"/> <!-- ПН -->
-                        <ColumnDefinition Width="*"/> <!-- ВТ -->
-                        <ColumnDefinition Width="*"/> <!-- СР -->
-                        <ColumnDefinition Width="*"/> <!-- ЧТ -->
-                        <ColumnDefinition Width="*"/> <!-- ПТ -->
-                        <ColumnDefinition Width="*"/> <!-- СБ -->
-                        <ColumnDefinition Width="*"/> <!-- ВС -->
+                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Сетка времени -->
-                    <Grid x:Name="TimeGrid" Grid.Column="0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                        </Grid.RowDefinitions>
+                    <!-- Time Column with Labels -->
+                    <ItemsControl x:Name="TimeLabels" Grid.Column="0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding}" 
+                                             HorizontalAlignment="Right" 
+                                             Margin="0,0,5,0"
+                                             Height="60"
+                                             Foreground="{DynamicResource PrimaryForeground}"/>
+                                    <!-- Horizontal Line -->
+                                    <Rectangle Height="1" 
+                                             Fill="{DynamicResource BorderBrush}" 
+                                             Width="{Binding ActualWidth, ElementName=WeeklyView}"
+                                             HorizontalAlignment="Left"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
 
-                        <!-- Добавляем горизонтальные линии -->
-                        <ItemsControl ItemsSource="{Binding Rows}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border BorderBrush="LightGray" BorderThickness="0,0,0,1"/>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </Grid>
+                    <!-- Vertical Lines -->
+                    <Rectangle Grid.Column="1" Width="1" HorizontalAlignment="Left" Fill="{DynamicResource BorderBrush}"/>
+                    <Rectangle Grid.Column="2" Width="1" HorizontalAlignment="Left" Fill="{DynamicResource BorderBrush}"/>
+                    <Rectangle Grid.Column="3" Width="1" HorizontalAlignment="Left" Fill="{DynamicResource BorderBrush}"/>
+                    <Rectangle Grid.Column="4" Width="1" HorizontalAlignment="Left" Fill="{DynamicResource BorderBrush}"/>
+                    <Rectangle Grid.Column="5" Width="1" HorizontalAlignment="Left" Fill="{DynamicResource BorderBrush}"/>
+                    <Rectangle Grid.Column="6" Width="1" HorizontalAlignment="Left" Fill="{DynamicResource BorderBrush}"/>
+                    <Rectangle Grid.Column="7" Width="1" HorizontalAlignment="Left" Fill="{DynamicResource BorderBrush}"/>
+                    <Rectangle Grid.Column="7" Width="1" HorizontalAlignment="Right" Fill="{DynamicResource BorderBrush}"/>
 
-                    <!-- Сетка тренировок -->
-                    <Grid x:Name="WeekCalendarGrid" Grid.Column="1" Grid.ColumnSpan="7">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="60"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="60"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <!-- Добавление линий с использованием Border -->
-                        <Border BorderBrush="{DynamicResource GridLineBrush}" BorderThickness="0,0,0,1" Grid.Row="0" Grid.ColumnSpan="7"/>
-                        <Border BorderBrush="{DynamicResource GridLineBrush}" BorderThickness="0,0,0,1" Grid.Row="1" Grid.ColumnSpan="7"/>
-                        <Border BorderBrush="{DynamicResource GridLineBrush}" BorderThickness="0,0,0,1" Grid.Row="2" Grid.ColumnSpan="7"/>
-                        <Border BorderBrush="{DynamicResource GridLineBrush}" BorderThickness="0,0,0,1" Grid.Row="3" Grid.ColumnSpan="7"/>
-                        <Border BorderBrush="{DynamicResource GridLineBrush}" BorderThickness="0,0,0,1" Grid.Row="4" Grid.ColumnSpan="7"/>
-                        <Border BorderBrush="{DynamicResource GridLineBrush}" BorderThickness="0,0,0,1" Grid.Row="5" Grid.ColumnSpan="7"/>
-                        <Border BorderBrush="{DynamicResource GridLineBrush}" BorderThickness="0,0,0,1" Grid.Row="6" Grid.ColumnSpan="7"/>
-                        <Border BorderBrush="{DynamicResource GridLineBrush}" BorderThickness="0,0,0,1" Grid.Row="7" Grid.ColumnSpan="7"/>
-                        <Border BorderBrush="{DynamicResource GridLineBrush}" BorderThickness="0,0,0,1" Grid.Row="8" Grid.ColumnSpan="7"/>
-                        <Border BorderBrush="{DynamicResource GridLineBrush}" BorderThickness="0,0,0,1" Grid.Row="9" Grid.ColumnSpan="7"/>
-                    </Grid>
+                    <!-- Days Content -->
+                    <ItemsControl x:Name="MondayColumn" Grid.Column="1">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemContainerStyle>
+                            <Style TargetType="ContentPresenter">
+                                <Setter Property="Canvas.Top" Value="{Binding TopPosition}"/>
+                                <Setter Property="Canvas.Left" Value="0"/>
+                                <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Path=ActualWidth}"/>
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{DynamicResource SecondaryBackground}"
+                                        BorderBrush="{DynamicResource BorderBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="4"
+                                        Margin="2"
+                                        Height="{Binding Height}"
+                                        Padding="5">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding DisplayTime}" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding DisplayName}"/>
+                                        <TextBlock Text="{Binding DisplayDescription}" 
+                                                 TextWrapping="Wrap"
+                                                 Opacity="0.7"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <ItemsControl x:Name="TuesdayColumn" Grid.Column="2" 
+                                  ItemsPanel="{Binding ItemsPanel, ElementName=MondayColumn}"
+                                  ItemContainerStyle="{Binding ItemContainerStyle, ElementName=MondayColumn}"
+                                  ItemTemplate="{Binding ItemTemplate, ElementName=MondayColumn}"/>
+                    <ItemsControl x:Name="WednesdayColumn" Grid.Column="3" 
+                                  ItemsPanel="{Binding ItemsPanel, ElementName=MondayColumn}"
+                                  ItemContainerStyle="{Binding ItemContainerStyle, ElementName=MondayColumn}"
+                                  ItemTemplate="{Binding ItemTemplate, ElementName=MondayColumn}"/>
+                    <ItemsControl x:Name="ThursdayColumn" Grid.Column="4" 
+                                  ItemsPanel="{Binding ItemsPanel, ElementName=MondayColumn}"
+                                  ItemContainerStyle="{Binding ItemContainerStyle, ElementName=MondayColumn}"
+                                  ItemTemplate="{Binding ItemTemplate, ElementName=MondayColumn}"/>
+                    <ItemsControl x:Name="FridayColumn" Grid.Column="5" 
+                                  ItemsPanel="{Binding ItemsPanel, ElementName=MondayColumn}"
+                                  ItemContainerStyle="{Binding ItemContainerStyle, ElementName=MondayColumn}"
+                                  ItemTemplate="{Binding ItemTemplate, ElementName=MondayColumn}"/>
+                    <ItemsControl x:Name="SaturdayColumn" Grid.Column="6" 
+                                  ItemsPanel="{Binding ItemsPanel, ElementName=MondayColumn}"
+                                  ItemContainerStyle="{Binding ItemContainerStyle, ElementName=MondayColumn}"
+                                  ItemTemplate="{Binding ItemTemplate, ElementName=MondayColumn}"/>
+                    <ItemsControl x:Name="SundayColumn" Grid.Column="7" 
+                                  ItemsPanel="{Binding ItemsPanel, ElementName=MondayColumn}"
+                                  ItemContainerStyle="{Binding ItemContainerStyle, ElementName=MondayColumn}"
+                                  ItemTemplate="{Binding ItemTemplate, ElementName=MondayColumn}"/>
                 </Grid>
             </ScrollViewer>
         </Grid>

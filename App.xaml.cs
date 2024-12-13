@@ -1,20 +1,25 @@
 using System;
 using System.Windows;
 using System.Diagnostics;
+using System.Windows.Media;
 using WorkoutApp.Data;
 
 namespace WorkoutApp
 {
     public partial class App : Application
     {
+        private static bool isDarkTheme = false;
+
         public App()
         {
             try
             {
+                InitializeComponent();
                 Debug.WriteLine("Application starting...");
                 this.DispatcherUnhandledException += App_DispatcherUnhandledException;
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
                 Debug.WriteLine("Exception handlers registered");
+                ApplyTheme(); // Apply default theme
             }
             catch (Exception ex)
             {
@@ -66,20 +71,40 @@ namespace WorkoutApp
 
         public static void ToggleTheme()
         {
-            var app = Current as App;
-            var isDarkTheme = app.Resources["IsDarkTheme"] as bool? ?? false;
-            app.Resources["IsDarkTheme"] = !isDarkTheme;
-
-            var dictionaries = app.Resources.MergedDictionaries;
-            var newTheme = new ResourceDictionary
+            try
             {
-                Source = new Uri(!isDarkTheme ? 
-                    "pack://application:,,,/WorkoutApp;component/Themes/DarkTheme.xaml" : 
-                    "pack://application:,,,/WorkoutApp;component/Themes/LightTheme.xaml")
-            };
+                isDarkTheme = !isDarkTheme;
+                ApplyTheme();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error toggling theme: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
-            dictionaries.Clear();
-            dictionaries.Add(newTheme);
+        private static void ApplyTheme()
+        {
+            try
+            {
+                var app = Current;
+                var themeDictionary = isDarkTheme ? "DarkTheme" : "LightTheme";
+                var theme = app.Resources[themeDictionary] as ResourceDictionary;
+
+                if (theme != null)
+                {
+                    foreach (var key in theme.Keys)
+                    {
+                        if (app.Resources.Contains(key))
+                        {
+                            app.Resources[key] = theme[key];
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error applying theme: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

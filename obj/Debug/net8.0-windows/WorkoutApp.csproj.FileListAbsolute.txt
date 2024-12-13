@@ -70,3 +70,4 @@ d:\University\Course\semester 3\COURSEWORK\code\WorkoutApp\obj\Debug\net8.0-wind
 d:\University\Course\semester 3\COURSEWORK\code\WorkoutApp\obj\Debug\net8.0-windows\WorkoutApp.pdb
 d:\University\Course\semester 3\COURSEWORK\code\WorkoutApp\obj\Debug\net8.0-windows\WorkoutApp.genruntimeconfig.cache
 d:\University\Course\semester 3\COURSEWORK\code\WorkoutApp\obj\Debug\net8.0-windows\ref\WorkoutApp.dll
+D:\University\Course\semester 3\COURSEWORK\code\WorkoutApp\obj\Debug\net8.0-windows\WorkoutApp.sourcelink.json
