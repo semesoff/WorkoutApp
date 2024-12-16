@@ -14,6 +14,8 @@ namespace WorkoutApp.Windows
         private readonly Workout _workout;
         private bool _isNewWorkout;
 
+        public string WindowTitle => _isNewWorkout ? "Добавление тренировки" : "Редактирование тренировки";
+
         public EditWorkoutWindow(WorkoutDbContext context, Workout workout = null)
         {
             try
@@ -28,6 +30,7 @@ namespace WorkoutApp.Windows
                 InitializeComponent();
                 _context = context;
                 _isNewWorkout = workout == null;
+                Title = WindowTitle;
 
                 if (_isNewWorkout)
                 {
